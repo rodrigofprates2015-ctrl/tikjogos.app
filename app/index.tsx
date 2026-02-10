@@ -22,16 +22,21 @@ export default function HomeScreen() {
   useEffect(() => { loadSavedNickname().then((s) => { if (s) setName(s); }); }, []);
 
   useEffect(() => {
-    if (status === 'lobby' && room && !navRef.current) {
+    if (status === 'lobby' && room && user && !navRef.current) {
       navRef.current = true;
-      // Small delay to let WS settle and avoid multiple navigations
       const t = setTimeout(() => {
-        router.push(`/sala/${room.code}`);
-      }, 100);
+        // Double-check state hasn't changed during the delay
+        const s = useGameStore.getState();
+        if (s.status === 'lobby' && s.room && s.user) {
+          router.push(`/sala/${s.room.code}`);
+        } else {
+          navRef.current = false;
+        }
+      }, 150);
       return () => clearTimeout(t);
     }
     if (status === 'home') navRef.current = false;
-  }, [status, room]);
+  }, [status, room, user]);
 
   const ensureUser = useCallback((): boolean => {
     if (!name.trim()) { Alert.alert('', 'Digite seu nickname'); return false; }
@@ -84,15 +89,19 @@ export default function HomeScreen() {
                 <View style={st.divLine} /><Text style={st.divText}>OU</Text><View style={st.divLine} />
               </View>
 
-              {/* Code + ENTRAR */}
-              <View style={st.joinRow}>
-                <View style={st.codeWrap}>
-                  <Input placeholder="CÓDIGO" value={code} onChangeText={(v) => setCode(v.toUpperCase())} maxLength={6} autoCapitalize="characters" returnKeyType="go" onSubmitEditing={handleJoin} variant="code" />
-                </View>
-                <View style={st.joinBtnWrap}>
-                  <Button title="ENTRAR" onPress={handleJoin} variant="green" size="md" loading={isLoading} icon={<LogIn size={18} strokeWidth={3} color="#fff" />} />
-                </View>
-              </View>
+              {/* Code */}
+              <Input placeholder="CÓDIGO DA SALA" value={code} onChangeText={(v) => setCode(v.toUpperCase())} maxLength={6} autoCapitalize="characters" returnKeyType="go" onSubmitEditing={handleJoin} variant="code" />
+
+              {/* ENTRAR */}
+              <Button
+                title="ENTRAR NA SALA"
+                onPress={handleJoin}
+                variant="green"
+                size="lg"
+                fullWidth
+                loading={isLoading}
+                icon={<LogIn size={22} strokeWidth={3} color="#fff" />}
+              />
 
               <View style={st.divider}>
                 <View style={st.divLine} /><Text style={st.divText}>OU</Text><View style={st.divLine} />
@@ -125,7 +134,5 @@ const st = StyleSheet.create({
   divider: { flexDirection: 'row', alignItems: 'center', gap: 16, paddingVertical: 4 },
   divLine: { flex: 1, height: 1, backgroundColor: '#4a6a8a' },
   divText: { color: '#8aa0b0', fontSize: 13, fontWeight: '800' },
-  joinRow: { flexDirection: 'row', gap: 10, alignItems: 'stretch' },
-  codeWrap: { flex: 1, minWidth: 0 },
-  joinBtnWrap: { flexShrink: 0, justifyContent: 'center' },
+
 });

@@ -13,7 +13,7 @@ export function HomeButton() {
     if (room) {
       Alert.alert('Voltar ao Início', 'Você vai sair da sala. Continuar?', [
         { text: 'Cancelar', style: 'cancel' },
-        { text: 'Sair', style: 'destructive', onPress: () => { leaveGame(); router.replace('/'); } },
+        { text: 'Sair', style: 'destructive', onPress: () => { leaveGame(); setTimeout(() => router.replace('/'), 50); } },
       ]);
     } else {
       router.replace('/');

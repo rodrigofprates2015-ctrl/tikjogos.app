@@ -45,7 +45,12 @@ export default function LobbyScreen() {
   const handleLeave = () => {
     Alert.alert('Sair da Sala', 'Tem certeza que deseja sair?', [
       { text: 'Cancelar', style: 'cancel' },
-      { text: 'Sair', style: 'destructive', onPress: () => { leaveGame(); router.replace('/'); } },
+      { text: 'Sair', style: 'destructive', onPress: () => {
+        leaveGame();
+        // leaveGame already sets status='home', the useEffect will handle navigation
+        // but also navigate explicitly as backup
+        setTimeout(() => router.replace('/'), 50);
+      }},
     ]);
   };
 

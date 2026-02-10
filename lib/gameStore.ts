@@ -573,17 +573,22 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   leaveGame: () => {
     const ws = get().ws;
+    // Clear state FIRST to prevent onclose from triggering reconnect
+    set({ status: 'home', room: null, ws: null, selectedMode: null, selectedThemeCode: null, lobbyChatMessages: [] });
     if (ws) {
+      // Disable all handlers to prevent any callbacks after leaving
+      ws.onclose = null;
+      ws.onerror = null;
+      ws.onmessage = null;
       if (ws.readyState === WebSocket.OPEN) {
         try {
           ws.send(JSON.stringify({ type: 'leave' }));
         } catch (e) {
-          console.error('Failed to send leave message:', e);
+          // ignore
         }
       }
       ws.close();
     }
-    set({ status: 'home', room: null, ws: null, selectedMode: null, selectedThemeCode: null, lobbyChatMessages: [] });
   },
 
   addNotification: (notification) => {

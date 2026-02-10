@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '@/lib/constants';
 import { useGameStore } from '@/lib/gameStore';
 import { ModeSelectScreen } from '@/components/ModeSelectScreen';
+import { ThemeSelectScreen } from '@/components/ThemeSelectScreen';
 import { GameConfigScreen } from '@/components/GameConfigScreen';
 import { GamePlayScreen } from '@/components/GamePlayScreen';
 import { NotificationToast } from '@/components/NotificationToast';
@@ -24,7 +25,8 @@ export default function GameScreen() {
 
   const content = () => {
     switch (status) {
-      case 'modeSelect': case 'submodeSelect': return <ModeSelectScreen />;
+      case 'modeSelect': return <ModeSelectScreen />;
+      case 'submodeSelect': return <ThemeSelectScreen />;
       case 'gameConfig': return <GameConfigScreen />;
       case 'playing': return <GamePlayScreen />;
       default: return <ModeSelectScreen />;

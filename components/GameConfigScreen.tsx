@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { HomeButton } from '@/components/HomeButton';
 
 export function GameConfigScreen() {
-  const { room, user, backToModeSelect, startGameWithConfig, selectedThemeCode } = useGameStore();
+  const { room, user, backToModeSelect, startGameWithConfig } = useGameStore();
   const isHost = room?.hostId === user?.uid;
   const pc = room?.players.filter((p) => p.connected !== false).length || 0;
   const maxImp = Math.max(1, Math.floor(pc / 3));
@@ -19,7 +19,11 @@ export function GameConfigScreen() {
   const handleStart = async () => {
     if (!isHost) return;
     setStarting(true);
-    try { await startGameWithConfig({ impostorCount: imp, enableHints: hints, firstPlayerHintOnly: firstOnly }, selectedThemeCode || undefined); }
+    try {
+      // For palavraSecreta, the theme is sent via selectedSubmode (AsyncStorage), not themeCode.
+      // themeCode is only for palavraComunidade (community-created themes with accessCode).
+      await startGameWithConfig({ impostorCount: imp, enableHints: hints, firstPlayerHintOnly: firstOnly });
+    }
     catch (e) { console.error(e); }
     finally { setStarting(false); }
   };
