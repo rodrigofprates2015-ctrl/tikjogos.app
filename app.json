@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "TikJogos",
+    "slug": "tikjogos",
+    "owner": "rodisfpss-organization",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "scheme": "tikjogos",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1a1b2e"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tikjogos.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1a1b2e"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.tikjogos.app"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "5281944a-6464-4489-84ca-8d3b21e51918"
+      }
+    }
+  }
+}
